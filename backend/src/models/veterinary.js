@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 import generateId from "../helpers/createId.js";
 
 // Schema -> Definir estructura y reglas de los documentos que voy a guardar MongoDB
@@ -38,6 +39,12 @@ const veterinarySchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
+});
+
+veterinarySchema.pre('save', async function(next) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
 });
 
 const Veterinary = mongoose.model('Veterinary', veterinarySchema);

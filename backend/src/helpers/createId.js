@@ -1,5 +1,3 @@
-const generateId = () => {
-    return Date.now().toString() + Math.random().toString(32).substring(2);
-}
+import generateId from './generateId.js';
 
 export default generateId;

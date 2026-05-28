@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import generateId from "../helpers/createId.js";
+import generateId from "../helpers/generateId.js";
 
 // Schema -> Definir estructura y reglas de los documentos que voy a guardar MongoDB
 
@@ -42,10 +42,18 @@ const veterinarySchema = mongoose.Schema({
 });
 
 veterinarySchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
+
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
+
+veterinarySchema.methods.comparePassword = async function(passwordToCompare) {
+    return bcrypt.compare(passwordToCompare, this.password);
+};
 
 const Veterinary = mongoose.model('Veterinary', veterinarySchema);
 export default Veterinary;

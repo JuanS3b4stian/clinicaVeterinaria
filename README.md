@@ -1,15 +1,16 @@
 # Clínica Veterinaria
 
-API backend para una clínica veterinaria construida con Node.js, Express y MongoDB. El proyecto está enfocado en la gestión de veterinarios y en un flujo básico de autenticación y confirmación de cuenta.
+API backend para una clínica veterinaria construida con Node.js, Express y MongoDB, con un frontend separado en React + Vite + Tailwind para el área pública de autenticación.
 
 ## Qué incluye hoy
 
-- Registro de veterinarios
-- Inicio de sesión base
+- Registro, login y perfil de veterinarios
 - Confirmación de cuenta mediante token
-- Endpoint de perfil
+- Recuperación de password con token temporal
+- Endpoint de perfil protegido con JWT
 - Conexión a MongoDB con `mongoose`
 - Hash de contraseñas con `bcrypt`
+- Frontend público con React Router y Axios
 
 ## Tecnologías
 
@@ -19,7 +20,12 @@ API backend para una clínica veterinaria construida con Node.js, Express y Mong
 - Mongoose
 - bcrypt
 - dotenv
-- nodemon para desarrollo
+- jsonwebtoken
+- nodemailer
+- React
+- Vite
+- Tailwind CSS
+- Axios
 
 ## Estructura
 
@@ -28,12 +34,26 @@ backend/
 ├── src/
 │   ├── config/db.js
 │   ├── controllers/veterinaryController.js
-│   ├── helpers/createId.js
+│   ├── helpers/
+│   ├── middlewares/authMiddleware.js
 │   ├── models/veterinary.js
 │   ├── routes/veterinaryRoutes.js
 │   └── index.js
 ├── package.json
 └── .env
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── config/axiosClient.js
+│   ├── context/AuthContext.jsx
+│   ├── hooks/useAuth.js
+│   ├── layouts/AuthLayout.jsx
+│   └── pages/
+├── index.html
+├── package.json
+├── tailwind.config.js
+└── vite.config.js
 ```
 
 ## Requisitos
@@ -49,14 +69,25 @@ Crea un archivo `.env` dentro de `backend/` con este contenido:
 PORT=3000
 MONGODB_URI=mongodb://127.0.0.1:27017/clinicaVeterinaria
 NODE_ENV=development
+JWT_SECRET=una_clave_larga_y_segura
+FRONTEND_URL=http://localhost:5173
 ```
 
 También puedes usar `MONGODB_URL` si prefieres ese nombre.
+
+En el frontend crea `frontend/.env` con:
+
+```env
+VITE_BACKEND_URL=http://localhost:3000/api
+```
 
 ## Instalación
 
 ```bash
 cd backend
+npm install
+
+cd ../frontend
 npm install
 ```
 
@@ -65,6 +96,9 @@ npm install
 ```bash
 npm run dev
 npm start
+
+cd ../frontend
+npm run dev
 ```
 
 ## Ejecución local
@@ -81,6 +115,9 @@ Base path: `/api/veterinarios`
 - `POST /register` - Registra un veterinario.
 - `POST /login` - Punto de entrada para autenticación.
 - `GET /confirm/:token` - Confirma la cuenta usando el token generado al registrar.
+- `POST /forget-password` - Solicita el email para recuperar password.
+- `GET /forget-password/:token` - Valida el token temporal.
+- `POST /forget-password/:token` - Guarda la nueva contraseña.
 - `GET /profile` - Endpoint base para el perfil del usuario.
 
 Endpoint general:
@@ -108,8 +145,8 @@ Las contraseñas se hashean automáticamente antes de guardar el documento.
 - ✅ Registro de veterinarios
 - ✅ Confirmación por token
 - ✅ Hash de contraseñas
-- 🔄 Login y perfil aún están en desarrollo
-- ⏳ Frontend no incluido en este repositorio
+- ✅ JWT y middleware de autenticación
+- ✅ Frontend público con rutas de auth
 
 ## Próximos pasos sugeridos
 

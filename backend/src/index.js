@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import conectarDB from './config/db.js';
 import veterinaryRoutes from './routes/veterinaryRoutes.js';
 
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleaware para parsear JSON
 app.use(express.json());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173'
+}));
 
 // Rutas
 app.use('/api/veterinarios', veterinaryRoutes);

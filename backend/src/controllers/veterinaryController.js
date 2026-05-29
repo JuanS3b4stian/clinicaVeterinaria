@@ -80,7 +80,8 @@ const confirm = async (req, res) => {
             return res.status(404).json({ msg: 'Token no válido' });
         }
 
-        userConfirm.token = null;
+        // remove the token field to avoid storing null (prevents unique index conflicts)
+        userConfirm.token = undefined;
         userConfirm.confirm = true;
         await userConfirm.save();
 
@@ -147,7 +148,8 @@ const newPassword = async (req, res) => {
         }
 
         veterinary.password = password;
-        veterinary.token = null;
+        // remove token field instead of setting null
+        veterinary.token = undefined;
         await veterinary.save();
 
         return res.json({ msg: 'Contraseña actualizada correctamente' });

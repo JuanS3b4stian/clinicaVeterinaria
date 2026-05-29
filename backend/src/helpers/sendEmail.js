@@ -7,7 +7,7 @@ const sendEmail = async ({ email, name, token, purpose }) => {
         : 'Confirma tu cuenta';
 
     const message = purpose === 'reset'
-        ? `Hola ${name}, usa este enlace para restablecer tu contraseña: ${baseUrl}/forget-password/${token}`
+        ? `Hola ${name}, usa este enlace para restablecer tu contraseña: ${baseUrl}/forgot-password/${token}`
         : `Hola ${name}, confirma tu cuenta desde este enlace: ${baseUrl}/confirm/${token}`;
 
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
